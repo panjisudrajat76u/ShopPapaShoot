@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOODIEPAPASHOOT - Y2K Cyber Store</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Space Grotesk', 'sans-serif'],
+                        display: ['Syne', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    },
+                    colors: {
+                        cyber: {
+                            pink: '#FF0099',
+                            cyan: '#00FFFF',
+                            yellow: '#FAFF00',
+                            dark: '#050505',
+                            panel: '#111111'
+                        }
+                    },
+                    backgroundImage: {
+                        'gradient-mesh': "radial-gradient(at 0% 0%, hsla(321,99%,55%,1) 0, transparent 50%), radial-gradient(at 100% 100%, hsla(188,100%,50%,1) 0, transparent 50%)",
+                        'noise': "url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%220.05%22/%3E%3C/svg%3E')",
+                    },
+                    animation: {
+                        'spin-slow': 'spin 12s linear infinite',
+                        'float': 'float 4s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 2s infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 5px #00FFFF, 0 0 10px #00FFFF' },
+                            '50%': { boxShadow: '0 0 20px #00FFFF, 0 0 30px #00FFFF' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Grotesk:wght@400;600&family=Space+Mono:wght@400;700&display=swap');
+        
+        body { font-family: 'Space Grotesk', sans-serif; background-color: #050505; color: white; }
+        .font-syne { font-family: 'Syne', sans-serif; }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        .text-outline {
+            -webkit-text-stroke: 1px rgba(255,255,255,0.5);
+            color: transparent;
+        }
+        .text-outline:hover {
+            color: #FF0099;
+            -webkit-text-stroke: 0px;
+        }
+
+        .cyber-border {
+            position: relative;
+            background: #111;
+            border: 1px solid #333;
+            transition: all 0.3s ease;
+        }
+        .cyber-border:hover {
+            border-color: #00FFFF;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body class="bg-cyber-dark min-h-screen overflow-x-hidden selection:bg-cyber-pink selection:text-white relative">
+    
+    <!-- Background Noise & Orbs -->
+    <div class="fixed inset-0 bg-noise pointer-events-none z-50 mix-blend-overlay opacity-30"></div>
+    <div class="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-cyber-pink rounded-full blur-[150px] opacity-20 animate-pulse pointer-events-none"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-cyber-cyan rounded-full blur-[150px] opacity-20 animate-pulse delay-75 pointer-events-none"></div>
+
+    <!-- NAVBAR -->
+    <nav class="fixed top-6 left-0 right-0 z-40 px-4 md:px-8">
+        <div class="max-w-7xl mx-auto bg-cyber-panel/80 backdrop-blur-md border border-white/10 rounded-full px-6 py-3 flex justify-between items-center shadow-[0_0_20px_rgba(255,0,153,0.15)]">
+            <div class="flex items-center gap-3">
+                <img src="papashoot logo doang.png" alt="Logo" class="w-10 h-10 drop-shadow-[0_0_10px_rgba(0,255,255,0.5)]">
+                <span class="font-syne font-bold text-xl tracking-tighter">Hoodie<span class="text-cyber-cyan">Papashoot</span></span>
+            </div>
+
+            <div class="hidden md:flex gap-8 text-sm font-mono tracking-widest text-gray-400">
+                <a href="#" class="hover:text-white transition-colors">HOME</a>
+                <a href="#koleksi" class="hover:text-cyber-pink transition-colors">DROPS</a>
+                <a href="#" class="hover:text-cyber-cyan transition-colors">ABOUT</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <button onclick="toggleTheme()" class="p-2 hover:bg-white/10 rounded-full transition-colors">
+                    <i data-lucide="sun-moon" class="w-5 h-5"></i>
+                </button>
+                <button onclick="toggleCart()" class="relative p-2 hover:bg-white/10 rounded-full transition-colors group">
+                    <i data-lucide="shopping-bag" class="w-5 h-5 group-hover:text-cyber-pink transition-colors"></i>
+                    <span id="cart-count" class="absolute top-0 right-0 w-2.5 h-2.5 bg-cyber-cyan rounded-full hidden shadow-[0_0_10px_#00FFFF]"></span>
+                </button>
+                <button onclick="toggleMenu()" class="md:hidden p-2 hover:bg-white/10 rounded-full">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="relative pt-40 pb-20 px-4 min-h-screen flex flex-col justify-center items-center text-center overflow-hidden">
+        <div class="relative z-10 animate-float">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-cyber-pink/50 bg-cyber-pink/10 text-cyber-pink font-mono text-xs mb-6 backdrop-blur-sm">
+                <span class="w-2 h-2 bg-cyber-pink rounded-full animate-pulse"></span>
+                SYSTEM ONLINE: NEW DROP V.02
+            </div>
+            
+            <h1 class="text-[10vw] md:text-[7rem] font-syne font-extrabold leading-[0.85] tracking-tighter mix-blend-lighten relative">
+                <span class="block text-outline cursor-default transition-all duration-500 hover:tracking-wide">HOODIE</span>
+                <span class="block bg-clip-text text-transparent bg-gradient-to-r from-cyber-pink via-white to-cyber-cyan">PAPA.SHOOT</span>
+            </h1>
+            
+            <p class="mt-8 font-mono text-gray-400 max-w-lg mx-auto text-sm md:text-base border-l-2 border-cyber-cyan pl-4 text-left">
+                // DEFINING THE FUTURE OF STREETWEAR.<br>
+                High-quality materials meet cyber aesthetics. Engineered for the bold.
+            </p>
+        </div>
+
+        <div class="mt-12 flex flex-col sm:flex-row gap-4 z-10">
+            <button onclick="window.location.href='#koleksi'" class="px-8 py-4 bg-white text-black font-bold font-syne rounded-full hover:bg-cyber-cyan transition-colors shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(0,255,255,0.6)]">
+                EXPLORE CATALOG
+            </button>
+        </div>
+
+        <!-- 3D Element Placeholder -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] md:w-[600px] md:h-[600px] border border-white/5 rounded-full animate-spin-slow pointer-events-none"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] md:w-[400px] md:h-[400px] border border-cyber-pink/20 rounded-full animate-spin-slow pointer-events-none" style="animation-direction: reverse;"></div>
+    </header>
+
+    <!-- SCROLLING TEXT -->
+    <div class="bg-cyber-pink text-black py-4 rotate-[-1deg] scale-105 border-y-2 border-white relative z-20 shadow-[0_0_50px_rgba(255,0,153,0.5)]">
+        <div class="animate-marquee whitespace-nowrap font-syne font-black text-2xl flex gap-12 items-center">
+            <span>❋ LIMITED EDITION</span>
+            <span>❋ WORLDWIDE SHIPPING</span>
+            <span>❋ PREMIUM COTTON</span>
+            <span>❋ FUTURE READY</span>
+            <span>❋ LIMITED EDITION</span>
+            <span>❋ WORLDWIDE SHIPPING</span>
+            <span>❋ PREMIUM COTTON</span>
+            <span>❋ FUTURE READY</span>
+        </div>
+    </div>
+
+    <!-- CATALOG -->
+    <section id="koleksi" class="py-24 px-4 md:px-8 max-w-[1800px] mx-auto">
+        
+        <!-- Filter Tabs -->
+        <div class="flex flex-wrap justify-center gap-4 mb-16 font-mono text-sm">
+            <button onclick="switchTab('hoodie')" id="tab-hoodie" class="px-6 py-2 rounded-full border border-cyber-cyan bg-cyber-cyan/10 text-cyber-cyan shadow-[0_0_15px_rgba(0,255,255,0.3)] transition-all">HOODIE.exe</button>
+            <button onclick="switchTab('zipper')" id="tab-zipper" class="px-6 py-2 rounded-full border border-white/20 text-gray-400 hover:border-white hover:text-white transition-all">ZIPPER.dat</button>
+            <button onclick="switchTab('crewneck')" id="tab-crewneck" class="px-6 py-2 rounded-full border border-white/20 text-gray-400 hover:border-white hover:text-white transition-all">CREWNECK.sys</button>
+            <button onclick="switchTab('pants')" id="tab-pants" class="px-6 py-2 rounded-full border border-white/20 text-gray-400 hover:border-white hover:text-white transition-all">PANTS.cfg</button>
+        </div>
+
+        <!-- Grid -->
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Items injected here -->
+        </div>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-white/10 bg-cyber-panel pt-20 pb-10 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-12">
+            <div>
+                <h2 class="font-syne font-bold text-4xl mb-4">Hoodie<span class="text-cyber-pink">Papashoot</span></h2>
+                <p class="font-mono text-xs text-gray-500 max-w-xs">
+                    // SYSTEM STATUS: ONLINE<br>
+                    // LOCATION: JKT, ID<br>
+                    // EST. MMXIV
+                </p>
+            </div>
+            
+            <div class="flex gap-12 font-mono text-sm">
+                <div class="flex flex-col gap-4">
+                    <span class="text-cyber-cyan mb-2">// NAV</span>
+                    <a href="#" class="hover:text-white text-gray-400">HOME</a>
+                    <a href="#" class="hover:text-white text-gray-400">SHOP</a>
+                    <a href="#" class="hover:text-white text-gray-400">ARCHIVE</a>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <span class="text-cyber-cyan mb-2">// SOCIAL</span>
+                    <a href="#" class="hover:text-white text-gray-400">IG</a>
+                    <a href="#" class="hover:text-white text-gray-400">X</a>
+                    <a href="#" class="hover:text-white text-gray-400">TT</a>
+                </div>
+            </div>
+        </div>
+        <div class="mt-20 text-center font-mono text-xs text-gray-600">
+            © 2024 HOODIEPAPASHOOT. ALL RIGHTS RESERVED.
+        </div>
+    </footer>
+
+    <!-- PRODUCT MODAL (Glassmorphism) -->
+    <div id="product-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeModal()"></div>
+        
+        <div id="modal-content" class="relative w-full max-w-5xl bg-cyber-panel/90 border border-white/10 rounded-3xl overflow-hidden flex flex-col md:flex-row shadow-[0_0_50px_rgba(255,0,153,0.15)] transform scale-95 opacity-0 transition-all duration-300">
+            
+            <button onclick="closeModal()" class="absolute top-4 right-4 z-20 p-2 bg-black/50 rounded-full text-white hover:bg-cyber-pink transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <!-- Image -->
+            <div class="w-full md:w-1/2 h-[350px] md:h-auto bg-black relative group overflow-hidden">
+                <img id="modal-img" src="" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700">
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                
+                <!-- Holographic Sticker -->
+                <div class="absolute bottom-6 left-6 w-16 h-16 rounded-full border border-white/30 flex items-center justify-center animate-spin-slow">
+                    <div class="text-[8px] font-mono text-white text-center">ORIGINAL<br>PRODUCT</div>
+                </div>
+            </div>
+
+            <!-- Info -->
+            <div class="w-full md:w-1/2 flex flex-col h-[500px] md:h-[650px] relative">
+                <!-- Background Grid -->
+                <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CiAgPHJlY3Qgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjAzKSIgLz4KPC9zdmc+')] pointer-events-none"></div>
+
+                <div class="flex-1 overflow-y-auto p-8 md:p-10 custom-scroll z-10">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="w-2 h-2 bg-cyber-pink rounded-full animate-pulse"></span>
+                        <p class="text-cyber-cyan font-mono text-xs tracking-widest">IN STOCK</p>
+                    </div>
+                    
+                    <h2 id="modal-title" class="text-4xl md:text-5xl font-syne font-bold uppercase leading-[0.9] mb-4 text-white">Product Name</h2>
+                    <p id="modal-price" class="text-3xl font-mono font-bold text-cyber-pink mb-8 border-b border-white/10 pb-6">Rp 0</p>
+                    
+                    <div class="prose prose-invert prose-sm font-sans text-gray-400 mb-8">
+                        <p id="modal-desc">Description...</p>
+                    </div>
+
+                    <div class="space-y-2 mb-8">
+                        <div class="flex items-center gap-3 p-3 border border-white/5 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
+                            <i data-lucide="cpu" class="text-cyber-cyan w-5 h-5"></i>
+                            <span class="font-mono text-xs text-gray-300">Premium Heavyweight Cotton</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 border border-white/5 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
+                            <i data-lucide="scan-face" class="text-cyber-cyan w-5 h-5"></i>
+                            <span class="font-mono text-xs text-gray-300">Unisex Oversized Cut</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="p-6 md:p-8 border-t border-white/10 bg-black/40 backdrop-blur-sm z-10">
+                    <div class="flex gap-4">
+                        <div class="flex items-center bg-white/5 rounded-full px-4 border border-white/10">
+                            <button onclick="changeModalQty(-1)" class="hover:text-cyber-pink transition-colors"><i data-lucide="minus" class="w-4 h-4"></i></button>
+                            <span id="modal-qty" class="w-12 text-center font-mono font-bold">1</span>
+                            <button onclick="changeModalQty(1)" class="hover:text-cyber-cyan transition-colors"><i data-lucide="plus" class="w-4 h-4"></i></button>
+                        </div>
+                        <button onclick="addToCart()" class="flex-1 bg-white text-black hover:bg-cyber-cyan transition-colors rounded-full font-bold font-syne uppercase tracking-wider h-14 shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(0,255,255,0.4)]">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CART SIDEBAR -->
+    <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full md:w-[450px] bg-cyber-dark z-[80] transform translate-x-full transition-transform duration-300 border-l border-white/10 flex flex-col shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+        <div class="p-6 border-b border-white/10 flex justify-between items-center bg-cyber-panel">
+            <h2 class="text-2xl font-syne font-bold uppercase">Cart (<span id="cart-total-items-sidebar" class="text-cyber-pink">0</span>)</h2>
+            <button onclick="toggleCart()" class="hover:text-cyber-pink transition-colors"><i data-lucide="x" class="w-6 h-6"></i></button>
+        </div>
+        
+        <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4">
+            <!-- Items -->
+        </div>
+
+        <div class="p-6 border-t border-white/10 bg-cyber-panel">
+            <div class="flex justify-between items-end mb-6 font-mono">
+                <span class="text-gray-400 text-sm">TOTAL</span>
+                <span id="cart-subtotal" class="text-2xl font-bold text-white">Rp 0</span>
+            </div>
+            <!-- Update Tombol Checkout dengan Fungsi WA -->
+            <button onclick="checkout()" class="w-full py-4 bg-cyber-pink text-white font-bold font-syne uppercase tracking-wider rounded-lg hover:bg-pink-600 transition-colors shadow-[0_0_20px_rgba(255,0,153,0.4)]">
+                Checkout ->
+            </button>
+        </div>
+    </div>
+
+    <!-- MOBILE MENU -->
+    <div id="mobile-menu" class="fixed inset-0 bg-cyber-dark z-[80] transform -translate-x-full transition-transform duration-300 flex flex-col items-center justify-center gap-8">
+        <button onclick="toggleMenu()" class="absolute top-6 right-6 text-white"><i data-lucide="x" class="w-8 h-8"></i></button>
+        <a href="#" class="text-4xl font-syne font-bold hover:text-cyber-cyan text-outline">HOME</a>
+        <a href="#koleksi" onclick="toggleMenu()" class="text-4xl font-syne font-bold hover:text-cyber-pink text-outline">CATALOG</a>
+        <a href="#" class="text-4xl font-syne font-bold hover:text-cyber-yellow text-outline">CONTACT</a>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 md:left-8 md:translate-x-0 z-[120] bg-white/10 backdrop-blur-md border border-cyber-cyan text-white px-6 py-3 rounded-full flex items-center gap-3 translate-y-24 opacity-0 transition-all duration-300 shadow-[0_0_20px_rgba(0,255,255,0.2)]">
+        <i data-lucide="check-circle" class="text-cyber-cyan w-5 h-5"></i>
+        <span class="font-mono text-sm font-bold">Item Added to System</span>
+    </div>
+
+    <script>
+        // --- DATA ---
+        const descText = "Hoodie heavyweight dengan potongan boxy yang memberikan siluet tegas. Menggunakan bahan cotton fleece premium yang lembut di dalam namun kokoh di luar. Finishing detail tinggi dengan print plastisol yang tahan lama.";
+        
+        const products = {
+            'hoodie': Array.from({length: 8}, (_, i) => ({ id: `h-${i}`, name: `CYBER HOODIE 0${i+1}`, price: 349000 + (i*10000), desc: descText, tag: i===0?"BEST SELLER": (i===3?"NEW DROP":null), image: `https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=600&q=80&sig=${i}` })),
+            'zipper': Array.from({length: 8}, (_, i) => ({ id: `z-${i}`, name: `ZIPPER TECH X${i+1}`, price: 379000 + (i*10000), desc: descText, tag: i===2?"LIMITED":null, image: `https://images.unsplash.com/photo-1620799140408-ed5341cd2431?auto=format&fit=crop&w=600&q=80&sig=${i+10}` })),
+            'crewneck': Array.from({length: 8}, (_, i) => ({ id: `c-${i}`, name: `CREWNECK CORE ${i+1}`, price: 299000 + (i*10000), desc: descText, tag: null, image: `https://images.unsplash.com/photo-1614975058789-41316d0e2e9c?auto=format&fit=crop&w=600&q=80&sig=${i+20}` })),
+            'pants': Array.from({length: 8}, (_, i) => ({ id: `p-${i}`, name: `CARGO OPS Z${i+1}`, price: 429000 + (i*15000), desc: "Celana kargo dengan banyak saku fungsional.", tag: i===0?"HOT ITEM":null, image: `https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=600&q=80&sig=${i+30}` }))
+        };
+
+        let cart = [];
+        let currentItem = null;
+        let currentQty = 1;
+
+        // --- CHECKOUT FUNCTION ---
+        function checkout() {
+            if (cart.length === 0) {
+                alert("Cart is empty! Add items first.");
+                return;
+            }
+
+            // GANTI NOMOR WA DISINI (Format: Kode Negara + Nomor, tanpa + atau 0 di depan)
+            const phoneNumber = "6281234567890"; 
+            
+            let message = "Halo HoodiePapashoot, saya ingin order:\n\n";
+
+            let total = 0;
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.qty;
+                total += itemTotal;
+                message += `${index + 1}. ${item.name} (${item.qty}x) - Rp ${itemTotal.toLocaleString('id-ID')}\n`;
+            });
+
+            message += `\nTotal: Rp ${total.toLocaleString('id-ID')}`;
+            message += "\n\nMohon info untuk pembayaran. Terima kasih!";
+
+            const encodedMessage = encodeURIComponent(message);
+            const url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+            window.open(url, '_blank');
+        }
+
+        // --- RENDER ---
+        function renderGrid(cat) {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = products[cat].map((p, idx) => {
+                const tagHtml = p.tag ? `<div class="absolute top-3 left-3 bg-cyber-pink text-white text-[10px] font-bold px-3 py-1 rounded-full z-10 shadow-[0_0_10px_#FF0099]">${p.tag}</div>` : '';
+                return `
+                <div class="cyber-border rounded-xl overflow-hidden group cursor-pointer" onclick="openModal('${cat}', '${p.id}')">
+                    <div class="relative aspect-[4/5] bg-gray-900 overflow-hidden">
+                        ${tagHtml}
+                        <img src="${p.image}" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-60"></div>
+                        
+                        <div class="absolute bottom-0 left-0 right-0 p-4 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                            <h3 class="font-syne font-bold text-xl uppercase leading-none mb-1 text-white group-hover:text-cyber-cyan transition-colors">${p.name}</h3>
+                            <p class="font-mono text-sm text-gray-400">Rp ${p.price.toLocaleString('id-ID')}</p>
+                        </div>
+
+                        <button class="absolute bottom-4 right-4 w-10 h-10 bg-white text-black rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-cyber-cyan hover:scale-110">
+                            <i data-lucide="plus" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+                `;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        // --- MODAL & CART LOGIC ---
+        function openModal(cat, id) {
+            currentItem = products[cat].find(p => p.id === id);
+            currentQty = 1;
+            
+            document.getElementById('modal-title').innerText = currentItem.name;
+            document.getElementById('modal-price').innerText = `Rp ${currentItem.price.toLocaleString('id-ID')}`;
+            document.getElementById('modal-desc').innerText = currentItem.desc;
+            document.getElementById('modal-img').src = currentItem.image;
+            document.getElementById('modal-qty').innerText = 1;
+
+            const modal = document.getElementById('product-modal');
+            const content = document.getElementById('modal-content');
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('product-modal');
+            const content = document.getElementById('modal-content');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = '';
+            }, 200);
+        }
+
+        function changeModalQty(delta) {
+            if (currentQty + delta > 0) {
+                currentQty += delta;
+                document.getElementById('modal-qty').innerText = currentQty;
+            }
+        }
+
+        function addToCart() {
+            const existing = cart.find(i => i.id === currentItem.id);
+            if(existing) existing.qty += currentQty;
+            else cart.push({...currentItem, qty: currentQty});
+            
+            updateCart();
+            closeModal();
+            showToast();
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(i => i.id !== id);
+            updateCart();
+        }
+
+        function updateCart() {
+            const container = document.getElementById('cart-items-container');
+            const totalEl = document.getElementById('cart-subtotal');
+            const countEl = document.getElementById('cart-count');
+            const sidebarCount = document.getElementById('cart-total-items-sidebar');
+            
+            const totalQty = cart.reduce((sum, i) => sum + i.qty, 0);
+            const totalPrice = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+
+            countEl.style.display = totalQty > 0 ? 'block' : 'none';
+            sidebarCount.innerText = totalQty;
+            totalEl.innerText = `Rp ${totalPrice.toLocaleString('id-ID')}`;
+
+            if(cart.length === 0) {
+                container.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center text-center opacity-30">
+                        <i data-lucide="shopping-bag" class="w-16 h-16 mb-4"></i>
+                        <p class="font-mono text-sm">SYSTEM EMPTY</p>
+                    </div>`;
+            } else {
+                container.innerHTML = cart.map(item => `
+                    <div class="flex gap-4 p-3 bg-white/5 rounded-xl border border-white/10">
+                        <img src="${item.image}" class="w-16 h-20 object-cover rounded-lg bg-gray-800">
+                        <div class="flex-1 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold font-syne uppercase text-sm text-white">${item.name}</h4>
+                                <p class="text-xs font-mono text-gray-400">Rp ${item.price.toLocaleString('id-ID')}</p>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-mono bg-white/10 px-2 py-0.5 rounded text-cyber-cyan">x${item.qty}</span>
+                                <button onclick="removeFromCart('${item.id}')" class="text-xs text-red-500 hover:text-red-400 font-bold">DEL</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            lucide.createIcons();
+        }
+
+        // --- UTILS ---
+        function switchTab(cat) {
+            ['hoodie','zipper','crewneck','pants'].forEach(c => {
+                const btn = document.getElementById(`tab-${c}`);
+                if(c === cat) {
+                    btn.classList.add('bg-cyber-cyan/10', 'text-cyber-cyan', 'border-cyber-cyan');
+                    btn.classList.remove('border-white/20', 'text-gray-400');
+                } else {
+                    btn.classList.remove('bg-cyber-cyan/10', 'text-cyber-cyan', 'border-cyber-cyan');
+                    btn.classList.add('border-white/20', 'text-gray-400');
+                }
+            });
+            renderGrid(cat);
+        }
+
+        function toggleCart() {
+            const el = document.getElementById('cart-sidebar');
+            el.classList.toggle('translate-x-full');
+            document.getElementById('mobile-menu').classList.add('-translate-x-full');
+        }
+
+        function toggleMenu() {
+            const el = document.getElementById('mobile-menu');
+            el.classList.toggle('-translate-x-full');
+            document.getElementById('cart-sidebar').classList.add('translate-x-full');
+        }
+
+        function toggleTheme() {
+            // Optional: Toggle themes logic here if needed
+        }
+
+        function showToast() {
+            const t = document.getElementById('toast');
+            t.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => t.classList.add('translate-y-24', 'opacity-0'), 2000);
+        }
+
+        // Init
+        renderGrid('hoodie');
+        lucide.createIcons();
+    </script>
+</body>
+</html>
